@@ -53,18 +53,32 @@ public class College
 
     /**
      * the method return a Student type that the student number is the same in the list
-     * @param StudentNumber an integer tyoe represent the student number
+     * @param studentNumber an integer tyoe represent the student number
      * @return the target student if not find return null
      */
-    public Student findStudent(int StudentNumber)
+    public Student findStudent(int studentNumber)
     {
         for(Student s : students)  // look in the list
         {
-            if(s.getStudentNumber() == StudentNumber)  // if the student number is the same
+            if(s.getStudentNumber() == studentNumber)  // if the student number is the same
                 return s;
         }
 
         return null;
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    public void deleteStudent(int studentNumber)
+    {
+        Student s = findStudent(studentNumber);
+
+        if(s == null)
+        {
+            System.out.println("the student is not exit");
+            return;
+        }
+        students.remove(s);
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -116,6 +130,12 @@ public class College
 
     public Student highestGPA()
     {
+        if(students.size() < 1)
+        {
+            System.out.println("there are no student in the college");
+            return null;
+        }
+
         Student s = students.get(0);
         double max = s.calculateGPA();
         for(int i = 1; i < students.size(); i++)

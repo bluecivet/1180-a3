@@ -69,32 +69,6 @@ public class CollegeTest
     }
 
 
-    ///////////////////////////////////////////////////////////////////////////
-
-    /**
-     * the method will check if the user input is vailda or not
-     * if it is with in range of low to high than it is vaildate
-     * if not not a vaildate input
-     * @param input a string that show the input that need to check
-     * @param low a character type show the lower limit
-     * @param high a character type show the upper limit
-     * @return true for vaildate input false for not vaildate
-     */
-    public static boolean vaild(String input, char low, char high)
-    {
-        for(int i = 0; i < input.length(); i++)   // check the string
-        {
-            if(input.charAt(i) > high || input.charAt(i) < low)   // within the limit
-            {
-                System.out.println("invalidate input");
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-
     //////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -107,7 +81,7 @@ public class CollegeTest
     {
         Scanner input = new Scanner(System.in);
         System.out.println("please enter the name for the student");
-        String name = input.nextLine();
+        String name = getName();
         System.out.println("please enter the address for the student");
         String address = input.nextLine();
 
@@ -172,14 +146,7 @@ public class CollegeTest
     {
         String userInput = getStudentNumber();         //user input student number
         int studentNumber = Integer.parseInt(userInput);
-        Student s = c.findStudent(studentNumber);
 
-        if(s == null)   // if can not find the student
-        {
-            System.out.println("the student is not exist");
-            return;    // end the method
-        }
-         // if it find
         double credit;
         double gp;
 
@@ -189,7 +156,7 @@ public class CollegeTest
         System.out.println("please enter the GP for the student");
         gp = getNumber();       // user enter GP for the course
 
-        s.addCourse(credit,gp);          // add the course for the student
+        c.addCourse(studentNumber,credit,gp);          // add the course for the student
 
         System.out.println("finish");
         System.out.println();
@@ -228,22 +195,31 @@ public class CollegeTest
     public static void findHightestGPA(College c)
     {
         Student s = c.highestGPA();
-        System.out.println("the highest GPA in this college is " + s.getName() + " the student number is " + s.getStudentNumber());
+
+        if(s == null)
+            return;
+
+        System.out.println("the highest GPA in this college is " + s.getName() + " the student number is " + s.getStudentNumber() + " the GPA is " + s.calculateGPA());
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
+
+    //-----------------------------------------------------------------------------------------------------------
+    //                                 the below is the get the user input method
+
+
 
     /**
      * the method will let the user input student number and check if the format of the number is vaild or not
      * @return the vaildate number in string format
      */
-    public static String getStudentNumber()
+    private static String getStudentNumber()
     {
         System.out.println("please enter the student number");
         Scanner input = new Scanner(System.in);
         boolean isvaild = true;  // is the input vaild
         String userInput;  // the user input
+        double studentNumber = 0;
 
         do
         {
@@ -257,6 +233,17 @@ public class CollegeTest
             else
             {
                 isvaild = true;    // is a validate number
+            }
+
+            if(isvaild)
+            {
+                studentNumber = Double.parseDouble(userInput);
+
+                if(studentNumber <= 10000)
+                {
+                    System.out.println("the number should bigger than 10000");
+                    isvaild = false;
+                }
             }
         }
         while(!isvaild);  // if the input is not validate
@@ -292,6 +279,74 @@ public class CollegeTest
         return Double.parseDouble(number);
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * this method let user input name and check if the name is valid or not if not input again
+     * @return a String the name of the person
+     */
+
+    public static String getName()
+    {
+        Scanner input = new Scanner(System.in);
+        String userInput;
+        boolean isvaild;
+
+        do
+        {
+            userInput = input.nextLine();
+            isvaild = vaildateName(userInput);
+
+            if(!isvaild)
+            {
+                System.out.println("please input the name again");
+            }
+        }
+        while(!isvaild);
+
+        return userInput;
+    }
+
+
+
+
+    //--------------------------------------------------------------------------------------------
+    //                        the below is the checking validation method
+
+
+
+
+
+
+    /**
+     * the method will check if the user input is vailda or not
+     * if it is with in range of low to high than it is vaildate
+     * if not not a vaildate input
+     * @param input a string that show the input that need to check
+     * @param low a character type show the lower limit
+     * @param high a character type show the upper limit
+     * @return true for vaildate input false for not vaildate
+     */
+    private static boolean vaild(String input, char low, char high)
+    {
+        if(input != null && !input.equals(""))
+        {
+            for(int i = 0; i < input.length(); i++)   // check the string
+            {
+                if(input.charAt(i) > high || input.charAt(i) < low)   // within the limit
+                {
+                    System.out.println("invalidate input");
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+
     //////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -302,7 +357,7 @@ public class CollegeTest
      * @param input a strig type for the text that user input
      * @return
      */
-    public static boolean vaildNumber(String input)
+    private static boolean vaildNumber(String input)
     {
         int doptCount = 0;  //count the number of '.'
 
@@ -331,6 +386,34 @@ public class CollegeTest
                 System.out.println("invalid input");
                 return false;
             }
+        }
+
+        return true;
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * the method will check the validation for the name input from the constructor and remove the extra blank
+     * if the name in not validated it return ***** ***** for student name
+     * @param oldName a String type that represent the the name of the student
+     * @return if the name is validated return the removed blank name if not return **** ****
+     */
+    private static boolean vaildateName(String oldName)
+    {
+        if(oldName.equals("")|| oldName.equals("\\s+"))   // if empty input
+        {
+            System.out.println("in correct name");
+            return false;
+        }
+
+        String names[] = oldName.trim().split("\\s+");  // remove blank
+
+        if(names.length != 2)   // // if incorrect input
+        {
+            System.out.println("incorrect name");
+            return false;
         }
 
         return true;
