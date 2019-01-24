@@ -199,7 +199,7 @@ public class CollegeTest
         if(s == null)
             return;
 
-        System.out.println("the highest GPA in this college is " + s.getName() + " the student number is " + s.getStudentNumber() + " the GPA is " + s.calculateGPA());
+        System.out.printf("the highest GPA in the college is %s the GPA is %-10.2f \n", s.getName(), s.calculateGPA());
     }
 
 
