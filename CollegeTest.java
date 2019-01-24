@@ -408,12 +408,38 @@ public class CollegeTest
             return false;
         }
 
+
         String names[] = oldName.trim().split("\\s+");  // remove blank
 
         if(names.length != 2)   // // if incorrect input
         {
-            System.out.println("incorrect name");
+            System.out.println("incorrect name the name should only contain first and last name");
             return false;
+        }
+
+        for(String str : names)
+        {
+            for(int i = 0; i < str.length(); i++)
+            {
+                if(i == 0)
+                {
+                    char firstLetter = str.charAt(i);
+                    if(firstLetter < 'A' || firstLetter > 'Z')
+                    {
+                        System.out.println("name format incorrect");
+                        System.out.println("the first letter of the first name or last name should be upper case");
+                        return false;
+                    }
+                }
+                else
+                {
+                    if(str.charAt(i) < 'a' || str.charAt(i) > 'z')
+                    {
+                        System.out.println("the letter contain is not correct");
+                        return false;
+                    }
+                }
+            }
         }
 
         return true;
